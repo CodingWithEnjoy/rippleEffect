@@ -47,12 +47,8 @@ rippleEffect = {
 You can further customize the appearance of the ripple effect by modifying the associated CSS:
 
 ```css
-/* Customize the ripple effect appearance */
-.r, button {
-    /* Your existing styles for triggering elements */
-}
 
-/* Define the ripple animation */
+/* Deine the ripple animation */
 .rs {
     /* Your ripple animation styles */
 }
