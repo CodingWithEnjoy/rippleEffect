@@ -90,6 +90,3 @@ const rippleEffect = {
         observer.observe(document.body, {childList: true, subtree: true});
     }
 };
-window.addEventListener('DOMContentLoaded', () => {
-    rippleEffect.initialize();
-}, false)
