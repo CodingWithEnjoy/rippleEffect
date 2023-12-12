@@ -12,9 +12,12 @@ const rippleEffect = {
         cursor: pointer;
         overflow: hidden;
       }
+      :root{
+          --rippleColor:${rippleEffect.color}
+      }
       .rs {
         position: absolute;
-        background: ${rippleEffect.color};
+        background: var(--rippleColor);
         pointer-events: none;
         width: 5px;
         height: 5px;
