@@ -1,3 +1,16 @@
+const isTouchCapable = 'ontouchstart' in window ||
+    (window.DocumentTouch && document instanceof window.DocumentTouch) ||
+    navigator.maxTouchPoints > 0 ||
+    window.navigator.msMaxTouchPoints > 0;
+let startEv;
+let endEv;
+if (isTouchCapable) {
+    startEv = 'touchstart';
+    endEv = 'touchend';
+} else {
+    startEv = 'mousedown';
+    endEv = 'mouseup';
+}
 const rippleEffect = {
     elements: ".r,button",
     color: "rgba(0,0,0,.1)",
@@ -36,9 +49,6 @@ const rippleEffect = {
           width: var(--ms);
           height: var(--ms);
         }
-        100% {
-          opacity: 0;
-        }
       }
     `;
         document.head.append(styleElement);
@@ -47,10 +57,17 @@ const rippleEffect = {
 
         function addRippleEffect(element) {
             element.classList.add("rd");
-            element.addEventListener('mousedown', (event) => {
+
+            element.addEventListener(startEv, (event) => {
+                let tchData;
+                if (isTouchCapable) {
+                    tchData = event.touches[0];
+                } else {
+                    tchData = event;
+                }
                 const ripple = document.createElement("div");
-                const y = event.clientY - element.getBoundingClientRect().top;
-                const x = event.clientX - element.getBoundingClientRect().left;
+                const y = tchData.clientY - element.getBoundingClientRect().top;
+                const x = tchData.clientX - element.getBoundingClientRect().left;
                 const scaleY = Math.max(element.clientHeight - y, y) * 2.5;
                 const scaleX = Math.max(element.clientWidth - x, x) * 2.5;
                 const rippleSize = Math.max(scaleY, scaleX) * 3 / 2;
@@ -58,7 +75,8 @@ const rippleEffect = {
 
                 ripple.style.cssText = `
           transition: ${transitionDuration}s;
-          animation: rippleAnimation forwards ${transitionDuration}s;
+          transition-delay:.1s;
+          animation: rippleAnimation forwards ${transitionDuration / 1.2}s;
           top: ${y}px;
           left: ${x}px;
           --ms: ${rippleSize}px;
@@ -69,12 +87,8 @@ const rippleEffect = {
                     ripple.style.background = 'transparent';
                 }
 
-                element.addEventListener('mouseup', removeRipple, false);
+                element.addEventListener(endEv, removeRipple, false);
 
-                setTimeout(() => {
-                    ripple.remove();
-                    element.removeEventListener('mouseup', removeRipple);
-                }, transitionDuration * 1000);
 
                 element.insertAdjacentElement('beforeend', ripple);
             }, false);
