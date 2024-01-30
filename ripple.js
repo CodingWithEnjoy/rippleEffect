@@ -12,7 +12,7 @@ if (isTouchCapable) {
     endEv = 'mouseup';
 }
 const rippleEffect = {
-    elements: ".r,button",
+    elements: ".r,button,[r]",
     color: "rgba(0,0,0,.1)",
     transitionDuration: 1,
 
@@ -23,6 +23,7 @@ const rippleEffect = {
         -webkit-tap-highlight-color: transparent;
         position: relative;
         cursor: pointer;
+        user-select:none;
         overflow: hidden;
       }
       :root{
@@ -85,6 +86,9 @@ const rippleEffect = {
 
                 function removeRipple() {
                     ripple.style.background = 'transparent';
+                    setTimeout(() => {
+                        ripple.remove()
+                    }, transitionDuration * 1000)
                 }
 
                 element.addEventListener(endEv, removeRipple, false);
