@@ -16,7 +16,7 @@ The `rippleEffect` library allows you to easily incorporate ripple effects into 
 Include the `rippleEffect` script in your HTML file:
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/zhmidd/rippleEffect@main/ripple.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/irdeako/rippleEffect@main/ripple.js"></script>
 ```
 
 ### Initialization
