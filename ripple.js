@@ -12,14 +12,14 @@ if (isTouchCapable) {
     endEv = 'mouseup';
 }
 const rippleEffect = {
-    elements: ".r,button,[r]",
+    elements: ".r:not(.rd),button:not(.rd),*[r]:not(.rd)",
     color: "rgba(0,0,0,.1)",
     transitionDuration: 1,
 
     initialize: () => {
         const styleElement = document.createElement('style');
         styleElement.innerHTML = `
-      ${rippleEffect.elements} {
+      .rd {
         -webkit-tap-highlight-color: transparent;
         position: relative;
         cursor: pointer;
@@ -86,9 +86,6 @@ const rippleEffect = {
 
                 function removeRipple() {
                     ripple.style.background = 'transparent';
-                    setTimeout(() => {
-                        ripple.remove()
-                    }, transitionDuration * 1000)
                 }
 
                 element.addEventListener(endEv, removeRipple, false);
@@ -99,14 +96,16 @@ const rippleEffect = {
         }
 
         elements.forEach(addRippleEffect);
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                mutation.addedNodes.forEach((addedNode) => {
-                    if (addedNode.nodeType === 1 && addedNode.matches(rippleEffect.elements)) {
-                        addRippleEffect(addedNode);
+        const observer = new MutationObserver((mutationsList) => {
+            for (const mutation of mutationsList) {
+                if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                    for (const addedNode of mutation.addedNodes) {
+                        if (addedNode.nodeType === 1 && addedNode.getAttribute('r') == '') {
+                           rippleEffect.initialize()
+                        }
                     }
-                });
-            });
+                }
+            }
         });
         observer.observe(document.body, {childList: true, subtree: true});
     }
